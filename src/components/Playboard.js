@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import Pieces from './Pieces'
+import PlayerIcon from './PlayerIcon'
 
 export default function Playboard({ theme, players, size }) {
-    const [guessedNumbers, setGuessedNumbers] = useState([])
+    const [guessedNumbers, setGuessedNumbers] = useState([]);
+    const [playerOne, setPlayerOne] = useState({active: false, points: 0});
+    const [playerTwo, setPlayerTwo] = useState({active: false, points: 0});
+    const [playerThree, setPlayerThree] = useState({active: true, points: 0});
+    const [playerFour, setPlayerFour] = useState({active: false, points: 0});
+
+
     let random = (size * size / 2)
     // let numbers = Array.from({length: random}, () => Math.floor(Math.random() * random));
     // console.log(numbers)
     let numberMatch = []
-    useEffect(() => {
-        for (let i=0; i < random; i++) numberMatch[i] = i;
+    for (let i=0; i < random; i++) numberMatch[i] = i;
 
     function shuffle(array) {
         let tmp, current, top = array.length;
@@ -22,10 +28,8 @@ export default function Playboard({ theme, players, size }) {
     }
 
     numberMatch = shuffle(numberMatch);
-    setGuessedNumbers([...numberMatch])
 
     console.log(numberMatch)
-    })
 
     const boardStyle = {
         display: "grid",
@@ -36,10 +40,18 @@ export default function Playboard({ theme, players, size }) {
 
     }
   return (
+    <>
     <div className='w-1/2 mx-auto' style={boardStyle}>
-        {numberMatch.map(number => <Pieces key={number} guessedNumbers={guessedNumbers}/>)}
-        {numberMatch.map(number => <Pieces key={number * 2} guessedNumbers={guessedNumbers}/>)}
+        {numberMatch.map(number => <Pieces number={number} players={players} theme={theme} />) }
+        {numberMatch.map(number => <Pieces number={number} players={players} theme={theme} />) }        
     </div>
+    <div className='flex w-full justify-between mt-16 px-24'>
+        <PlayerIcon number={1} points={playerOne.points} active={playerOne.active} />
+        <PlayerIcon number={2} points={playerTwo.points} active={playerTwo.active} />
+        <PlayerIcon number={3} points={playerThree.points} active={playerThree.active} />
+        <PlayerIcon number={4} points={playerFour.points} active={playerFour.active} />
+    </div>
+    </>
     
   )
 }

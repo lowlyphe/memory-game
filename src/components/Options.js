@@ -10,6 +10,7 @@ export default function () {
 
   if (!start) {
     return (
+        <div className='bg-darkBlue w-100vw h-100vh'>
         <div className='flex flex-col bg-white text-mediumBlue mx-auto w-80 rounded-lg p-4 space-y-3'>
             <p className='mr-auto text-xs'>Select Theme</p>
             <div className='flex justify-between'>
@@ -33,6 +34,7 @@ export default function () {
             </div>
             
     
+        </div>
         </div>
       )
   }
