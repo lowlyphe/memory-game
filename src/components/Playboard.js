@@ -8,42 +8,58 @@ export default function Playboard({ theme, players, size }) {
     const [playerTwo, setPlayerTwo] = useState({active: false, points: 0});
     const [playerThree, setPlayerThree] = useState({active: true, points: 0});
     const [playerFour, setPlayerFour] = useState({active: false, points: 0});
+    const [choices, setChoices] = useState(0);
+    const [currentMatch, setCurrentMatch] = useState(-1)
+    const [currentNumbers, setCurrentNumbers] = useState([])
 
-
-    let random = (size * size / 2)
-    // let numbers = Array.from({length: random}, () => Math.floor(Math.random() * random));
-    // console.log(numbers)
-    let numberMatch = []
-    for (let i=0; i < random; i++) numberMatch[i] = i;
-
-    function shuffle(array) {
-        let tmp, current, top = array.length;
-        if(top) while(--top) {
-            current = Math.floor(Math.random() * (top + 1));
-            tmp = array[current];
-            array[current] = array[top];
-            array[top] = tmp;
+    const handleChoices = (num) => {
+        if (currentMatch === -1) setCurrentMatch(num)
+        else if (currentMatch === num) {
+            setGuessedNumbers(prevGuessedNumbers => [...prevGuessedNumbers, num])
         }
-        return array;
+        
     }
+    let numberMatch = []
+    useEffect(() => {
+        let random = (size * size / 2)
+        for (let i=0; i < random; i++) numberMatch[i] = i;
 
-    numberMatch = shuffle(numberMatch);
+        function shuffle(array) {
+            let tmp, current, top = array.length;
+            if(top) while(--top) {
+                current = Math.floor(Math.random() * (top + 1));
+                tmp = array[current];
+                array[current] = array[top];
+                array[top] = tmp;
+            }
+        return array;
+        }
 
-    console.log(numberMatch)
+    numberMatch = [...numberMatch, ...numberMatch]
+    numberMatch = shuffle(numberMatch)
+    setCurrentNumbers(numberMatch)
+    }, [])
 
     const boardStyle = {
         display: "grid",
         gridTemplateColumns: `repeat(${size}, 1fr)`,
         gridTemplateRows: `repeat(${size}, 4fr)`,
-        columnGap: '10px',
-        rowGap: '10px',
+        columnGap: '15px',
+        rowGap: '15px',
 
     }
   return (
     <>
-    <div className='w-1/2 mx-auto' style={boardStyle}>
-        {numberMatch.map(number => <Pieces number={number} players={players} theme={theme} />) }
-        {numberMatch.map(number => <Pieces number={number} players={players} theme={theme} />) }        
+    <div className='flex justify-between px-24'>
+        <p className='text-2xl text-darkBlue font-bold' >memory</p>
+        <div className='flex space-x-6'>
+            <button className='bg-gold text-white rounded-full py-2 px-4 w-28 hover:bg-lightGold' >Restart</button>
+            <button className='bg-mediumGray text-darkBlue rounded-full py-2 px-4 w-28 hover:bg-lightBlue hover:text-white' >New Game</button>
+        </div>
+
+    </div>
+    <div className='w-1/2 mx-auto my-16' style={boardStyle}>
+        {currentNumbers.map(number => <Pieces number={number} players={players} theme={theme} handleChoices={handleChoices} guessedNumbers={guessedNumbers} />) }     
     </div>
     <div className='flex w-full justify-between mt-16 px-24'>
         <PlayerIcon number={1} points={playerOne.points} active={playerOne.active} />

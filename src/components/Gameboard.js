@@ -3,9 +3,9 @@ import Options from './Options'
 
 export default function Gameboard() {
   return (
-    <div className='text-white w-screen h-screen'>
-        <span className='my-4'>memory</span>
-        <Options />
+    <div>
+        <span>memory</span>
+        <Options className='w-100vw h-100vh'/>
         
     </div>
   )
